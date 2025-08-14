@@ -11,6 +11,44 @@ const initialState: GeneralInitialState = {
   theme: localStorage.getItem('theme') ?? null,
 }
 
+export const loginUser = createAsyncThunk(
+  'auth/login',
+  async (
+    payload: { email: string; password: string },
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const result = await dispatch(
+        userApi.endpoints.login.initiate({
+          body: payload,
+        }),
+      ).unwrap()
+      return result
+    } catch (err: any) {
+      return rejectWithValue(err.data || err.message)
+    }
+  },
+)
+
+export const registerUser = createAsyncThunk(
+  'auth/register',
+  async (
+    payload: { name: string; email: string; password: string },
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const result = await dispatch(
+        userApi.endpoints.register.initiate({
+          body: payload,
+        }),
+      ).unwrap()
+      return result
+    } catch (err: any) {
+      return rejectWithValue(err.data || err.message)
+    }
+  },
+)
+
 const generalSlice = createSlice({
   name: 'general',
   initialState: initialState,

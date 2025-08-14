@@ -20,7 +20,7 @@ import general from '@/store/slices/general'
 const persistConfig = {
   key: 'root-v1.0.0',
   storage,
-  whitelist: ['auth', 'deviceRegistration'],
+  whitelist: ['auth', 'deviceRegistration', 'general'],
   serialize: true,
   transforms: [
     {

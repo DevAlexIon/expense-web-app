@@ -6,12 +6,61 @@ import {
   CardTitle,
 } from '@/components/Card'
 import { DollarSign, TrendingUp, TrendingDown, PlusCircle } from 'lucide-react'
-import { TransactionForm } from './TransactionForm'
+import { Transaction, TransactionForm } from './TransactionForm'
+import { TransactionList } from './TransactionList'
+import { useState } from 'react'
 
 const Home: React.FC = () => {
   const balance = 1000
   const totalIncome = 2000
   const totalExpenses = 200
+  const [transactions, setTransactions] = useState<Transaction[]>([
+    {
+      id: '1',
+      type: 'income',
+      amount: 3500,
+      description: 'Salary',
+      category: 'Job',
+      date: '2025-01-15',
+    },
+    {
+      id: '2',
+      type: 'expense',
+      amount: 450,
+      description: 'Grocery Shopping',
+      category: 'Food',
+      date: '2025-01-14',
+    },
+    {
+      id: '3',
+      type: 'expense',
+      amount: 120,
+      description: 'Gas Bill',
+      category: 'Utilities',
+      date: '2025-01-13',
+    },
+    {
+      id: '4',
+      type: 'income',
+      amount: 200,
+      description: 'Freelance Work',
+      category: 'Side Job',
+      date: '2025-01-12',
+    },
+  ])
+
+  const updateTransaction = (
+    id: string,
+    updatedTransaction: Omit<Transaction, 'id'>,
+  ) => {
+    setTransactions(
+      transactions.map(t => (t.id === id ? { ...updatedTransaction, id } : t)),
+    )
+  }
+
+  const deleteTransaction = (id: string) => {
+    setTransactions(transactions.filter(t => t.id !== id))
+  }
 
   return (
     <div className='min-h-screen bg-gray-50/50'>
@@ -106,12 +155,12 @@ const Home: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className='p-0'>
-                {/* <TransactionList
+                <TransactionList
                   transactions={transactions}
-                  onUpdate={onUpdateTransaction}
-                  onDelete={onDeleteTransaction}
-                /> */}
-                <p>123</p>
+                  onUpdate={updateTransaction}
+                  onDelete={deleteTransaction}
+                />
+                {/* <p>123</p> */}
               </CardContent>
             </Card>
           </div>

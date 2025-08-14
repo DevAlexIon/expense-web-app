@@ -16,7 +16,6 @@ export default defineConfig({
   server: {
     port: 3050,
   },
-  envPrefix: 'BOB',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

@@ -10,7 +10,7 @@ import type { RootState } from '@/store'
 import { Constants } from '@/constants/general'
 
 const prepareHeaders = (headers: Headers) => {
-  headers.set('X-Auth-Token', '126AF11DE93B01044662')
+  // headers.set('X-Auth-Token', '126AF11DE93B01044662')
 
   const withoutAuth = Boolean(headers.get('no-auth'))
   if (withoutAuth) {

@@ -1,5 +1,5 @@
 const Constants = {
-  API_BASE_URL: import.meta.env.BOB_CORE as string,
+  API_BASE_URL: import.meta.env.VITE_EXPENSE_SERVER as string,
 }
 
 export { Constants }

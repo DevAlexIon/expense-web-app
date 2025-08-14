@@ -1,7 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import { ModalProvider } from '@/context/modalContext'
 import Layout from '@/pages/Layout'
 import Home from '@/pages/Home'
+import { Login } from './pages/Login'
+import { Register } from './pages/Register'
 
 const AppRoutes: React.FC = () => {
   return (
@@ -17,6 +19,8 @@ const AppRoutes: React.FC = () => {
               </Layout>
             }
           />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
         </Routes>
       </ModalProvider>
     </BrowserRouter>

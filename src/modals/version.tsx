@@ -26,12 +26,12 @@ const Version: React.FC<VersionProps> = props => {
           {props.storageName}
         </span>
       </p>
-      <Button
+      {/* <Button
         category='primary'
         caption='Confirm'
         size='xl'
         onClick={() => handleChangeVersion()}
-      />
+      /> */}
     </div>
   )
 }

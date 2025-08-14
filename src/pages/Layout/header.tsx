@@ -1,7 +1,10 @@
 import Button from '@/components/button'
 import { BarChart3, LogOut, Wallet } from 'lucide-react'
+import { useNavigate } from 'react-router'
 
 const Header: React.FC = () => {
+  const navigate = useNavigate()
+
   return (
     <>
       {/* Header */}
@@ -26,6 +29,7 @@ const Header: React.FC = () => {
               variant='outline'
               size='sm'
               className='flex items-center space-x-2'
+              onClick={() => navigate('/login')}
             >
               <BarChart3 className='w-4 h-4' />
               <span>Reports</span>
