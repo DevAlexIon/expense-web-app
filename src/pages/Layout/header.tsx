@@ -1,9 +1,12 @@
 import Button from '@/components/button'
+import { selectUser } from '@/store/slices/general'
 import { BarChart3, LogOut, Wallet } from 'lucide-react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
+  const user = useSelector(selectUser)
 
   return (
     <>
@@ -17,9 +20,11 @@ const Header: React.FC = () => {
               </div>
               <div>
                 <h1 className='text-lg font-semibold text-gray-900'>
-                  Expense Tracker
+                  ExpenseTracker
                 </h1>
-                <p className='text-sm text-gray'>Welcome back, John Doe</p>
+                <p className='text-sm text-gray-500'>
+                  Welcome back, {user?.user.name}
+                </p>
               </div>
             </div>
           </div>
@@ -28,17 +33,23 @@ const Header: React.FC = () => {
             <Button
               variant='outline'
               size='sm'
+              // onClick={onNavigateToReports}
               className='flex items-center space-x-2'
-              onClick={() => navigate('/login')}
             >
               <BarChart3 className='w-4 h-4' />
               <span>Reports</span>
             </Button>
 
             <div className='flex items-center space-x-3'>
+              <img
+                src={'https://placehold.co/600x400'}
+                alt='User Avatar'
+                className='w-8 h-8 rounded-full'
+              />
               <Button
                 variant='ghost'
                 size='sm'
+                // onClick={onLogout}
                 className='text-gray-500 hover:text-gray-700'
               >
                 <LogOut className='w-4 h-4' />

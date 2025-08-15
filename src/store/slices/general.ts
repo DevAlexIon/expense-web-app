@@ -1,14 +1,15 @@
 import { userApi } from '@/services/modules'
-import { Chain } from '@/services/modules/users/getChains'
+import { LoginResponse } from '@/services/modules/users/login'
 import { RootState } from '@/store'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { setTransactions } from './transactionSlice'
 
 type GeneralInitialState = {
-  theme: string | null
+  user: LoginResponse | null
 }
 
 const initialState: GeneralInitialState = {
-  theme: localStorage.getItem('theme') ?? null,
+  user: null,
 }
 
 export const loginUser = createAsyncThunk(
@@ -23,6 +24,7 @@ export const loginUser = createAsyncThunk(
           body: payload,
         }),
       ).unwrap()
+      dispatch(setUserInfo(result))
       return result
     } catch (err: any) {
       return rejectWithValue(err.data || err.message)
@@ -53,22 +55,16 @@ const generalSlice = createSlice({
   name: 'general',
   initialState: initialState,
   reducers: {
-    setDarkModeApperance: (
-      state,
-      { payload }: PayloadAction<'dark' | 'light'>,
-    ) => {
-      state.theme = payload
-      localStorage.setItem('theme', payload)
+    setUserInfo: (state, { payload }: PayloadAction<LoginResponse>) => {
+      state.user = payload
     },
   },
 
   // },
 })
 
-export const selectApperanceMode = (state: RootState) => {
-  return state.general.theme === 'dark'
-}
+export const selectUser = (state: RootState) => state.general.user
 
-export const { setDarkModeApperance } = generalSlice.actions
+export const { setUserInfo } = generalSlice.actions
 
 export default generalSlice.reducer

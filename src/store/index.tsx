@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { configureStore, isRejected, Middleware } from '@reduxjs/toolkit'
+import { configureStore, Middleware } from '@reduxjs/toolkit'
 import { api } from '@/services/api'
 import storage from 'redux-persist/lib/storage'
 import {
@@ -16,6 +16,7 @@ import { setupListeners } from '@reduxjs/toolkit/query'
 import { useDispatch } from 'react-redux'
 import { bigIntSerializer, showToast } from '@/helpers/utils'
 import general from '@/store/slices/general'
+import transaction from '@/store/slices/transactionSlice'
 
 const persistConfig = {
   key: 'root-v1.0.0',
@@ -53,6 +54,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   general,
+  transaction,
   [api.reducerPath]: api.reducer,
 })
 

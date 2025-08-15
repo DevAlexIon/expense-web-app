@@ -5,37 +5,11 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
-    colors: {
-      //base colors
-      transparent: 'transparent',
-      black: '#000000',
-      white: '#FFFFFF',
-
-      // !!! WARNING CONVENTION !!! add "-light" to the end of the color name for light mode
-      //design colors
-      primary: '#F0F0F0',
-      'primary-light': '#1E384B',
-      secondary: '#232323',
-      'secondary-light': '#FFFFFF',
-      'dashboard-lg-gray': '#565656', // NO NAME HERE BY DESIGNER
-      'accent-1': '#97D700',
-      green: '#00A53D',
-      'deep-purple': '#5e3baf',
-      'light-gray': '#444444',
-      'light-gray-light': '#F4F5F6',
-      'light-gray-2': '#898989', // TODO: FIX THIS COLOR IS NOT ADDED BY DESIGNER (*** OPACITY PROBLEM WITH DESINER TALK ***)
-      'light-gray-2-light': '#8D9BA5', // TODO: FIX THIS COLOR IS NOT ADDED BY DESIGNER (*** OPACITY PROBLEM WITH DESINER TALK ***)
-      'switch-gray': '#E6E7E9',
-
-      grayOpacity: '#4d4d4d', // gray with opacity
-      red: '#E7000B',
-      gray: '#777777', // NO NAME HERE BY DESIGNER
-      'switch-background': '#111111',
-      background: '#141414',
-      'background-light': '#ECEEF0',
-      //shadow colors
-      shadow: '#121212',
-      'shadow-light': '#F0F0F0',
+    extend: {
+      colors: {
+        green: '#00A53D',
+        red: '#E7000B',
+      },
     },
     fontFamily: {
       poppins: ['Poppins'],

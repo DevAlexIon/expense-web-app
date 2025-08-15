@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import {
+  deleteTransaction,
+  editTransaction,
+  selectTransactions,
+} from '@/store/slices/transactionSlice'
+import { TransactionResponse } from '@/services/modules/transactions/getUserTransactions'
+import { formatDateForInput } from '@/helpers/utils'
 
-import { Transaction, TransactionForm } from './TransactionForm'
+import { TransactionForm, TransactionFormValues } from './TransactionForm'
 import { Edit, Trash2, TrendingUp, TrendingDown } from 'lucide-react'
+
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/dialog'
-import Button from '@/components/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,39 +29,40 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/alertDialog'
+import Button from '@/components/button'
 import { Badge } from '@/components/badge'
+import { useAppDispatch } from '@/store'
+import { useToast } from '@/components/Toast'
 
-interface TransactionListProps {
-  transactions: Transaction[]
-  onUpdate: (id: string, transaction: Omit<Transaction, 'id'>) => void
-  onDelete: (id: string) => void
-}
+export const TransactionList = () => {
+  const transactions = useSelector(selectTransactions)
+  const dispatch = useAppDispatch()
+  const { addToast } = useToast()
 
-export function TransactionList({
-  transactions,
-  onUpdate,
-  onDelete,
-}: TransactionListProps) {
   const [editingTransaction, setEditingTransaction] =
-    useState<Transaction | null>(null)
+    useState<TransactionResponse | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
-  const handleEdit = (transaction: Transaction) => {
+  const handleEdit = (transaction: TransactionResponse) => {
     setEditingTransaction(transaction)
     setIsEditDialogOpen(true)
   }
 
-  const handleUpdate = (updatedTransaction: Omit<Transaction, 'id'>) => {
-    if (editingTransaction) {
-      onUpdate(editingTransaction.id, updatedTransaction)
-      setIsEditDialogOpen(false)
-      setEditingTransaction(null)
-    }
+  const handleUpdate = async (values: TransactionFormValues) => {
+    await dispatch(
+      editTransaction({
+        id: editingTransaction!._id,
+        ...values,
+      }),
+    )
+    addToast('Transaction edited successfully!', 'success')
+    setIsEditDialogOpen(false)
+    setEditingTransaction(null)
   }
 
-  const handleDelete = (id: string) => {
-    onDelete(id)
-    // toast.success('Transaction deleted successfully')
+  const handleDelete = async (id: string) => {
+    dispatch(deleteTransaction(id))
+    addToast('Transaction deleted successfully!', 'success')
   }
 
   if (transactions.length === 0) {
@@ -73,13 +82,13 @@ export function TransactionList({
   }
 
   return (
-    <div className='divide-y divide-gray-200'>
-      {transactions.map(transaction => (
-        <div
-          key={transaction.id}
-          className='p-4 hover:bg-gray-50 transition-colors'
-        >
-          <div className='flex items-center justify-between'>
+    <>
+      <div className='divide-y divide-gray-200'>
+        {transactions.map(transaction => (
+          <div
+            key={transaction._id}
+            className='p-4 hover:bg-gray-50 transition-colors flex justify-between items-center'
+          >
             <div className='flex items-center space-x-4'>
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center ${
@@ -92,8 +101,7 @@ export function TransactionList({
                   <TrendingDown className='w-4 h-4 text-red-600' />
                 )}
               </div>
-
-              <div className='min-w-0 flex-1'>
+              <div className='min-w-0'>
                 <div className='flex items-center space-x-2 mb-1'>
                   <p className='font-medium text-gray-900 truncate'>
                     {transaction.description}
@@ -109,47 +117,28 @@ export function TransactionList({
             </div>
 
             <div className='flex items-center space-x-3'>
-              <div className='text-right'>
-                <p
-                  className={`font-semibold ${
-                    transaction.type === 'income'
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {transaction.type === 'income' ? '+' : '-'}$
-                  {transaction.amount.toLocaleString()}
-                </p>
-              </div>
+              <p
+                className={`font-semibold ${
+                  transaction.type === 'income'
+                    ? 'text-green-600'
+                    : 'text-red-600'
+                }`}
+              >
+                {transaction.type === 'income' ? '+' : '-'}$
+                {transaction.amount.toLocaleString()}
+              </p>
 
               <div className='flex items-center space-x-1'>
-                <Dialog
-                  open={isEditDialogOpen}
-                  onOpenChange={setIsEditDialogOpen}
+                {/* Edit Button */}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  onClick={() => handleEdit(transaction)}
                 >
-                  <DialogTrigger asChild>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      onClick={() => handleEdit(transaction)}
-                    >
-                      <Edit className='w-4 h-4' />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className='sm:max-w-md'>
-                    <DialogHeader>
-                      <DialogTitle>Edit Transaction</DialogTitle>
-                    </DialogHeader>
-                    {editingTransaction && (
-                      <TransactionForm
-                        mode='edit'
-                        initialData={editingTransaction}
-                        onSubmit={handleUpdate}
-                      />
-                    )}
-                  </DialogContent>
-                </Dialog>
+                  <Edit className='w-4 h-4' />
+                </Button>
 
+                {/* Delete Alert */}
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
@@ -171,7 +160,7 @@ export function TransactionList({
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
-                        onClick={() => handleDelete(transaction.id)}
+                        onClick={() => handleDelete(transaction._id)}
                         className='bg-red-600 hover:bg-red-700'
                       >
                         Delete
@@ -182,8 +171,33 @@ export function TransactionList({
               </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+
+      {/* Global Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className='sm:max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Edit Transaction</DialogTitle>
+            <DialogDescription>
+              Update the details of your transaction and save the changes.
+            </DialogDescription>
+          </DialogHeader>
+          {editingTransaction && (
+            <TransactionForm
+              mode='edit'
+              initialValues={{
+                type: editingTransaction.type,
+                amount: editingTransaction.amount,
+                description: editingTransaction.description,
+                category: editingTransaction.category,
+                date: formatDateForInput(editingTransaction.date),
+              }}
+              onSubmit={handleUpdate}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

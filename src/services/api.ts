@@ -9,23 +9,6 @@ import { Mutex } from 'async-mutex'
 import type { RootState } from '@/store'
 import { Constants } from '@/constants/general'
 
-const prepareHeaders = (headers: Headers) => {
-  // headers.set('X-Auth-Token', '126AF11DE93B01044662')
-
-  const withoutAuth = Boolean(headers.get('no-auth'))
-  if (withoutAuth) {
-    headers.delete('no-auth')
-    return headers
-  }
-
-  const userDetails = false
-  if (userDetails) {
-    headers.set('x-profile-id', 'id_of_user')
-  }
-
-  return headers
-}
-
 // const refreshAppToken = async (api: BaseQueryApi, extraOptions: any) => {
 //   const state = api.getState() as RootState
 //   const refreshToken = state.auth.refreshToken
@@ -53,10 +36,18 @@ const baseQuery: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  const state = api.getState() as RootState
-
   const baseUrl = Constants.API_BASE_URL as string
-  const rawBaseQuery = fetchBaseQuery({ baseUrl, prepareHeaders })
+  const rawBaseQuery = fetchBaseQuery({
+    baseUrl,
+    prepareHeaders: (headers, { getState }) => {
+      const state = getState() as RootState
+      const token = state.general.user?.token
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`)
+      }
+      return headers
+    },
+  })
 
   return rawBaseQuery(args, api, extraOptions)
 }
@@ -91,5 +82,5 @@ export const api = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
   reducerPath: 'api',
-  tagTypes: ['auth'],
+  tagTypes: ['auth', 'Transactions'],
 })

@@ -6,61 +6,33 @@ import {
   CardTitle,
 } from '@/components/Card'
 import { DollarSign, TrendingUp, TrendingDown, PlusCircle } from 'lucide-react'
-import { Transaction, TransactionForm } from './TransactionForm'
 import { TransactionList } from './TransactionList'
-import { useState } from 'react'
+import {
+  getUserTransactions,
+  selectTransactions,
+} from '@/store/slices/transactionSlice'
+import { TransactionForm } from './TransactionForm'
+import { useSelector } from 'react-redux'
+import { useAppDispatch } from '@/store'
+import { useEffect } from 'react'
 
 const Home: React.FC = () => {
-  const balance = 1000
-  const totalIncome = 2000
-  const totalExpenses = 200
-  const [transactions, setTransactions] = useState<Transaction[]>([
-    {
-      id: '1',
-      type: 'income',
-      amount: 3500,
-      description: 'Salary',
-      category: 'Job',
-      date: '2025-01-15',
-    },
-    {
-      id: '2',
-      type: 'expense',
-      amount: 450,
-      description: 'Grocery Shopping',
-      category: 'Food',
-      date: '2025-01-14',
-    },
-    {
-      id: '3',
-      type: 'expense',
-      amount: 120,
-      description: 'Gas Bill',
-      category: 'Utilities',
-      date: '2025-01-13',
-    },
-    {
-      id: '4',
-      type: 'income',
-      amount: 200,
-      description: 'Freelance Work',
-      category: 'Side Job',
-      date: '2025-01-12',
-    },
-  ])
+  const transactions = useSelector(selectTransactions)
+  const dispatch = useAppDispatch()
 
-  const updateTransaction = (
-    id: string,
-    updatedTransaction: Omit<Transaction, 'id'>,
-  ) => {
-    setTransactions(
-      transactions.map(t => (t.id === id ? { ...updatedTransaction, id } : t)),
-    )
-  }
+  const totalIncome = transactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0)
 
-  const deleteTransaction = (id: string) => {
-    setTransactions(transactions.filter(t => t.id !== id))
-  }
+  const totalExpenses = transactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0)
+
+  const balance = totalIncome - totalExpenses
+
+  useEffect(() => {
+    dispatch(getUserTransactions())
+  }, [dispatch])
 
   return (
     <div className='min-h-screen bg-gray-50/50'>
@@ -77,7 +49,7 @@ const Home: React.FC = () => {
             <CardContent>
               <div
                 className={`text-2xl font-semibold ${
-                  balance >= 0 ? 'text-green' : 'text-red'
+                  balance >= 0 ? 'text-green-600' : 'text-red-600'
                 }`}
               >
                 ${Math.abs(balance).toLocaleString()}
@@ -93,13 +65,16 @@ const Home: React.FC = () => {
               <CardTitle className='text-sm font-medium text-gray-600'>
                 Total Income
               </CardTitle>
-              <TrendingUp className='h-4 w-4 text-green' />
+              <TrendingUp className='h-4 w-4 text-green-500' />
             </CardHeader>
             <CardContent>
-              <div className='text-2xl font-semibold text-green'>
+              <div className='text-2xl font-semibold text-green-600'>
                 ${totalIncome.toLocaleString()}
               </div>
-              <p className='text-xs text-gray-500 mt-1'>transactions</p>
+              <p className='text-xs text-gray-500 mt-1'>
+                {transactions.filter(t => t.type === 'income').length}{' '}
+                transactions
+              </p>
             </CardContent>
           </Card>
 
@@ -108,19 +83,20 @@ const Home: React.FC = () => {
               <CardTitle className='text-sm font-medium text-gray-600'>
                 Total Expenses
               </CardTitle>
-              <TrendingDown className='h-4 w-4 text-red' />
+              <TrendingDown className='h-4 w-4 text-red-500' />
             </CardHeader>
             <CardContent>
-              <div className='text-2xl font-semibold text-red'>
+              <div className='text-2xl font-semibold text-red-600'>
                 ${totalExpenses.toLocaleString()}
               </div>
               <p className='text-xs text-gray-500 mt-1'>
-                {/* {transactions.filter(t => t.type === 'expense').length}{' '} */}
+                {transactions.filter(t => t.type === 'expense').length}{' '}
                 transactions
               </p>
             </CardContent>
           </Card>
         </div>
+
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           {/* Transaction Form */}
           <div className='lg:col-span-1'>
@@ -135,12 +111,7 @@ const Home: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <TransactionForm
-                  onSubmit={transaction => {
-                    // onAddTransaction(transaction)
-                    // setShowTransactionForm(false)
-                  }}
-                />
+                <TransactionForm mode='create' />
               </CardContent>
             </Card>
           </div>
@@ -155,12 +126,7 @@ const Home: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className='p-0'>
-                <TransactionList
-                  transactions={transactions}
-                  onUpdate={updateTransaction}
-                  onDelete={deleteTransaction}
-                />
-                {/* <p>123</p> */}
+                <TransactionList />
               </CardContent>
             </Card>
           </div>

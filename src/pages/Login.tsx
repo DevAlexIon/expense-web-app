@@ -15,6 +15,7 @@ import { Formik, Form, ErrorMessage } from 'formik'
 import { loginSchema } from '@/schemas/login'
 import { useAppDispatch } from '@/store'
 import { loginUser } from '@/store/slices/general'
+import { getUserTransactions } from '@/store/slices/transactionSlice'
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -26,7 +27,10 @@ export const Login = () => {
   const handleLogin = async (values: { email: string; password: string }) => {
     setIsLoading(true)
     try {
-      const response = await dispatch(loginUser(values)).unwrap()
+      await dispatch(loginUser(values)).unwrap()
+      await dispatch(getUserTransactions())
+      addToast('Login successful', 'success')
+      navigate('/')
     } catch (error) {
       console.error(error)
       addToast('Something went wrong', 'error')
