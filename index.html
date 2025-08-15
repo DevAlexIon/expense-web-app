@@ -10,16 +10,16 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expense Web App</title>
-    <script>
+    <!-- <script>
       document.documentElement.classList.toggle(
         'dark',
         localStorage.theme === 'dark' ||
           (!('theme' in localStorage) &&
             window.matchMedia('(prefers-color-scheme: dark)').matches),
       )
-    </script>
+    </script> -->
   </head>
-  <body class="bg-background-light dark:bg-background">
+  <body class="">
     <div id="root" class="flex flex-1 font-poppins"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
