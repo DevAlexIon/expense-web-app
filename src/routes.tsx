@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
+import { BrowserRouter, Routes, Route } from 'react-router'
 import { ModalProvider } from '@/context/modalContext'
 import Layout from '@/pages/Layout'
 import Home from '@/pages/Home'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
+import PrivateRoute from './components/privateRoute'
 
 const AppRoutes: React.FC = () => {
   return (
@@ -14,9 +15,11 @@ const AppRoutes: React.FC = () => {
             index
             path='/'
             element={
-              <Layout>
-                <Home />
-              </Layout>
+              <PrivateRoute>
+                <Layout>
+                  <Home />
+                </Layout>
+              </PrivateRoute>
             }
           />
           <Route path='/login' element={<Login />} />
