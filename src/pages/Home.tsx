@@ -15,6 +15,8 @@ import { TransactionForm } from './TransactionForm'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from '@/store'
 import { useEffect } from 'react'
+import CountUp from 'react-countup'
+import { usePrevious } from '@/hooks/usePrevious'
 
 const Home: React.FC = () => {
   const transactions = useSelector(selectTransactions)
@@ -29,6 +31,9 @@ const Home: React.FC = () => {
     .reduce((sum, t) => sum + t.amount, 0)
 
   const balance = totalIncome - totalExpenses
+  const prevBalance = usePrevious(balance) ?? 0
+  const prevExpenses = usePrevious(totalExpenses) ?? 0
+  const prevIncome = usePrevious(totalIncome) ?? 0
 
   useEffect(() => {
     dispatch(getUserTransactions())
@@ -52,7 +57,14 @@ const Home: React.FC = () => {
                   balance >= 0 ? 'text-green-600' : 'text-red-600'
                 }`}
               >
-                ${Math.abs(balance).toLocaleString()}
+                $
+                <CountUp
+                  start={prevBalance}
+                  end={balance}
+                  duration={1.5}
+                  separator=','
+                  key={balance}
+                />
               </div>
               <p className='text-xs text-gray-500 mt-1'>
                 {balance >= 0 ? '+' : '-'} Current balance
@@ -69,7 +81,13 @@ const Home: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-semibold text-green-600'>
-                ${totalIncome.toLocaleString()}
+                $
+                <CountUp
+                  start={prevIncome}
+                  end={totalIncome}
+                  duration={1.5}
+                  separator=','
+                />
               </div>
               <p className='text-xs text-gray-500 mt-1'>
                 {transactions.filter(t => t.type === 'income').length}{' '}
@@ -87,7 +105,13 @@ const Home: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-semibold text-red-600'>
-                ${totalExpenses.toLocaleString()}
+                $
+                <CountUp
+                  start={prevExpenses}
+                  end={totalExpenses}
+                  duration={1.5}
+                  separator=','
+                />
               </div>
               <p className='text-xs text-gray-500 mt-1'>
                 {transactions.filter(t => t.type === 'expense').length}{' '}

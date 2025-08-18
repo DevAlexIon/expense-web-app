@@ -15,6 +15,7 @@ import { registerSchema } from '@/schemas/register'
 import { useAppDispatch } from '@/store'
 import { registerUser } from '@/store/slices/general'
 import { useToast } from '@/components/Toast'
+import { SerializedError } from '@reduxjs/toolkit'
 
 export const Register = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -41,11 +42,11 @@ export const Register = () => {
   const handleSubmitFormik = async (values: RegisterValues) => {
     setIsLoading(true)
     try {
-      const response = await dispatch(registerUser(values)).unwrap()
+      await dispatch(registerUser(values)).unwrap()
       navigate('/')
     } catch (error) {
-      console.error(error)
-      addToast('Something went wrong', 'error')
+      const err = error as SerializedError
+      addToast(err.message ?? 'Something went wrong', 'error')
     } finally {
       setIsLoading(false)
     }
@@ -75,12 +76,9 @@ export const Register = () => {
                 />
               </svg>
             </div>
-            <h1 className='text-3xl font-semibold text-gray-900 mb-2'>
-              Join ExpenseTracker
+            <h1 className='text-4xl font-semibold text-gray-900 mb-2'>
+              Join Expense Tracker
             </h1>
-            <p className='text-gray-600'>
-              Create your account to start tracking expenses
-            </p>
           </div>
 
           {/* Register Card */}
@@ -319,7 +317,7 @@ export const Register = () => {
                   Already have an account?{' '}
                   <Button
                     variant='link'
-                    className='p-0 h-auto text-primary font-medium hover:text-primary/80'
+                    className='p-0 h-auto text-primary font-medium hover:text-primary/80 hover:cursor-pointer'
                     onClick={() => navigate('/login')}
                   >
                     Sign in instead
@@ -346,9 +344,6 @@ export const Register = () => {
               </svg>
               <span>Your data is encrypted and secure</span>
             </div>
-            <p className='text-gray-500 text-xs'>
-              By creating an account, you agree to our Terms & Privacy Policy
-            </p>
           </div>
         </div>
       </div>

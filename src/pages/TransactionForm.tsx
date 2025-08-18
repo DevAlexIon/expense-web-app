@@ -87,7 +87,7 @@ export const TransactionForm = ({
           <Form className='space-y-4'>
             {/* Transaction Type */}
             <div className='space-y-2'>
-              <Label>Transaction Type</Label>
+              <Label>Transaction Type*</Label>
               <Select
                 value={values.type}
                 onValueChange={value =>
@@ -111,7 +111,7 @@ export const TransactionForm = ({
 
             {/* Amount */}
             <div className='space-y-2'>
-              <Label htmlFor='amount'>Amount ($)</Label>
+              <Label htmlFor='amount'>Amount*</Label>
               <Field
                 as={Input}
                 id='amount'
@@ -144,7 +144,7 @@ export const TransactionForm = ({
 
             {/* Category */}
             <div className='space-y-2'>
-              <Label>Category</Label>
+              <Label>Category*</Label>
               <Select
                 value={values.category}
                 onValueChange={value => setFieldValue('category', value)}
@@ -169,7 +169,7 @@ export const TransactionForm = ({
 
             {/* Date */}
             <div className='space-y-2'>
-              <Label htmlFor='date'>Date</Label>
+              <Label htmlFor='date'>Date*</Label>
               <Field as={Input} id='date' name='date' type='date' />
               <ErrorMessage
                 name='date'

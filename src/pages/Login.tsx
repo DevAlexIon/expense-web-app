@@ -16,6 +16,7 @@ import { loginSchema } from '@/schemas/login'
 import { useAppDispatch } from '@/store'
 import { loginUser } from '@/store/slices/general'
 import { getUserTransactions } from '@/store/slices/transactionSlice'
+import { SerializedError } from '@reduxjs/toolkit'
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -32,8 +33,8 @@ export const Login = () => {
       addToast('Login successful', 'success')
       navigate('/')
     } catch (error) {
-      console.error(error)
-      addToast('Something went wrong', 'error')
+      const err = error as SerializedError
+      addToast(err.message ?? 'Something went wrong', 'error')
     } finally {
       setIsLoading(false)
     }
@@ -61,12 +62,9 @@ export const Login = () => {
                 />
               </svg>
             </div>
-            <h1 className='text-3xl font-semibold text-gray-900 mb-2'>
+            <h1 className='text-4xl font-semibold text-gray-900 mb-2'>
               Welcome Back
             </h1>
-            <p className='text-gray-600'>
-              Sign in to continue to ExpenseTracker
-            </p>
           </div>
 
           <Card className='border-0 shadow-lg bg-white'>

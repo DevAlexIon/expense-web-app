@@ -2,7 +2,6 @@ import { userApi } from '@/services/modules'
 import { LoginResponse } from '@/services/modules/users/login'
 import { RootState } from '@/store'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { setTransactions } from './transactionSlice'
 
 type GeneralInitialState = {
   user: LoginResponse | null
@@ -55,12 +54,10 @@ const generalSlice = createSlice({
   name: 'general',
   initialState: initialState,
   reducers: {
-    setUserInfo: (state, { payload }: PayloadAction<LoginResponse>) => {
+    setUserInfo: (state, { payload }: PayloadAction<LoginResponse | null>) => {
       state.user = payload
     },
   },
-
-  // },
 })
 
 export const selectUser = (state: RootState) => state.general.user

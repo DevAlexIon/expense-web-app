@@ -1,12 +1,22 @@
 import Button from '@/components/button'
-import { selectUser } from '@/store/slices/general'
+import { useToast } from '@/components/Toast'
+import { useAppDispatch } from '@/store'
+import { selectUser, setUserInfo } from '@/store/slices/general'
 import { BarChart3, LogOut, Wallet } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
-  const user = useSelector(selectUser)
+  const userInfo = useSelector(selectUser)
+  const dispatch = useAppDispatch()
+  const { addToast } = useToast()
+
+  const handleLogout = () => {
+    dispatch(setUserInfo(null))
+    addToast('Logout successful', 'success')
+    navigate('/login')
+  }
 
   return (
     <>
@@ -20,10 +30,11 @@ const Header: React.FC = () => {
               </div>
               <div>
                 <h1 className='text-lg font-semibold text-gray-900'>
-                  ExpenseTracker
+                  Expense Tracker
                 </h1>
                 <p className='text-sm text-gray-500'>
-                  Welcome back, {user?.user.name}
+                  Welcome back,{' '}
+                  <span className='font-bold'>{userInfo?.user.name}</span>
                 </p>
               </div>
             </div>
@@ -32,6 +43,7 @@ const Header: React.FC = () => {
           <div className='flex items-center space-x-4'>
             <Button
               variant='outline'
+              disabled
               size='sm'
               // onClick={onNavigateToReports}
               className='flex items-center space-x-2'
@@ -41,15 +53,15 @@ const Header: React.FC = () => {
             </Button>
 
             <div className='flex items-center space-x-3'>
-              <img
+              {/* <img
                 src={'https://placehold.co/600x400'}
                 alt='User Avatar'
                 className='w-8 h-8 rounded-full'
-              />
+              /> */}
               <Button
                 variant='ghost'
                 size='sm'
-                // onClick={onLogout}
+                onClick={handleLogout}
                 className='text-gray-500 hover:text-gray-700'
               >
                 <LogOut className='w-4 h-4' />

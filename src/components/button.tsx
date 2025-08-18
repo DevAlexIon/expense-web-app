@@ -18,8 +18,7 @@ type ButtonProps = React.ComponentProps<'button'> & {
 }
 
 const baseClasses =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
-
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
 const variantClasses: Record<Variant, string> = {
   default: 'bg-primary text-primary-foreground hover:bg-primary/90',
   destructive:

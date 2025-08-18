@@ -1,4 +1,6 @@
-import React, { useState, useEffect, createContext, useContext } from 'react'
+import React, { useState, createContext, useContext } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { CheckCircle, XCircle, Info, X } from 'lucide-react'
 
 interface Toast {
   id: string
@@ -32,39 +34,53 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-      <div className='fixed top-4 left-1/2 z-50 space-y-2'>
-        {toasts.map(toast => (
-          <div
-            key={toast.id}
-            className={`flex items-center p-4 rounded-lg shadow-lg border max-w-sm ${
-              toast.type === 'success'
-                ? 'bg-green-50 border-green-200 text-green-800'
-                : toast.type === 'error'
-                ? 'bg-red-50 border-red-200 text-red-800'
-                : 'bg-blue-50 border-blue-200 text-blue-800'
-            }`}
-          >
-            <div className='flex-1'>{toast.message}</div>
-            <button
-              onClick={() => removeToast(toast.id)}
-              className='ml-2 text-current opacity-70 hover:opacity-100'
+      <div className='fixed top-6 left-1/2 -translate-x-1/2 z-50 space-y-3'>
+        <AnimatePresence>
+          {toasts.map(toast => (
+            <motion.div
+              key={toast.id}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className={`flex items-center gap-3 p-4 rounded-2xl shadow-xl border backdrop-blur-sm max-w-sm text-sm relative overflow-hidden
+                ${
+                  toast.type === 'success'
+                    ? 'bg-green-100/90 border-green-300 text-green-900'
+                    : toast.type === 'error'
+                    ? 'bg-red-100/90 border-red-300 text-red-900'
+                    : 'bg-blue-100/90 border-blue-300 text-blue-900'
+                }`}
             >
-              <svg
-                className='w-4 h-4'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
+              {toast.type === 'success' && <CheckCircle className='w-5 h-5' />}
+              {toast.type === 'error' && <XCircle className='w-5 h-5' />}
+              {toast.type === 'info' && <Info className='w-5 h-5' />}
+
+              <div className='flex-1'>{toast.message}</div>
+
+              <button
+                onClick={() => removeToast(toast.id)}
+                className='opacity-60 hover:opacity-100 transition'
               >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M6 18L18 6M6 6l12 12'
-                />
-              </svg>
-            </button>
-          </div>
-        ))}
+                <X className='w-4 h-4' />
+              </button>
+
+              {/* Progress bar */}
+              <motion.div
+                initial={{ width: '100%' }}
+                animate={{ width: '0%' }}
+                transition={{ duration: 4, ease: 'linear' }}
+                className={`absolute bottom-0 left-0 h-1 ${
+                  toast.type === 'success'
+                    ? 'bg-green-500'
+                    : toast.type === 'error'
+                    ? 'bg-red-500'
+                    : 'bg-blue-500'
+                }`}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </ToastContext.Provider>
   )
@@ -76,10 +92,4 @@ export function useToast() {
     throw new Error('useToast must be used within a ToastProvider')
   }
   return context
-}
-
-export const toast = {
-  success: (message: string) => {},
-  error: (message: string) => {},
-  info: (message: string) => {},
 }
