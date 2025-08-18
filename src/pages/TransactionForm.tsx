@@ -13,7 +13,8 @@ import {
 import { createNewTransaction } from '@/store/slices/transactionSlice'
 import { useAppDispatch } from '@/store'
 import { TransactionSchema } from '@/schemas/TransactionSchema'
-import { TransactionResponse } from '@/services/modules/transactions/getUserTransactions'
+import { useToast } from '@/components/Toast'
+import { SerializedError } from '@reduxjs/toolkit'
 
 const expenseCategories = [
   'Food',
@@ -57,6 +58,7 @@ export const TransactionForm = ({
   onSubmit,
 }: TransactionFormProps) => {
   const dispatch = useAppDispatch()
+  const { addToast } = useToast()
 
   const defaultValues: TransactionFormValues = {
     type: 'income',
@@ -70,14 +72,21 @@ export const TransactionForm = ({
     <Formik
       initialValues={initialValues || defaultValues}
       validationSchema={TransactionSchema}
-      onSubmit={(values, { resetForm }) => {
-        if (mode === 'edit' && onSubmit) {
-          onSubmit(values)
-        } else {
-          dispatch(createNewTransaction(values))
+      onSubmit={async (values, { resetForm }) => {
+        try {
+          if (mode === 'edit' && onSubmit) {
+            await onSubmit(values)
+          } else {
+            await dispatch(createNewTransaction(values)).unwrap()
+            addToast('Transaction created successfully!', 'success')
+          }
+          resetForm()
+        } catch (error) {
+          const err = error as SerializedError
+          addToast(err.message || 'Failed to save transaction', 'error')
         }
-        resetForm()
       }}
+      s
     >
       {({ values, setFieldValue }) => {
         const categories =

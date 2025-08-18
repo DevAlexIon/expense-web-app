@@ -1,7 +1,12 @@
 import { transactionsApi } from '@/services/modules/transactions'
 import { TransactionResponse } from '@/services/modules/transactions/getUserTransactions'
 import { RootState } from '@/store'
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  SerializedError,
+} from '@reduxjs/toolkit'
 
 type GeneralInitialState = {
   transactions: TransactionResponse[]
@@ -50,8 +55,9 @@ export const createNewTransaction = createAsyncThunk(
       dispatch(addTransactionToState(result))
 
       return result
-    } catch (err: any) {
-      return rejectWithValue(err.data || err.message)
+    } catch (error) {
+      const err = error as SerializedError
+      return rejectWithValue(err.message)
     }
   },
 )
