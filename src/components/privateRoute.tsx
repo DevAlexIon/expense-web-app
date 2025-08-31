@@ -1,4 +1,4 @@
-import { selectUser } from '@/store/slices/general'
+import { selectToken, selectUser } from '@/store/slices/general'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
 
@@ -7,9 +7,9 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const userInfo = useSelector(selectUser)
+  const token = useSelector(selectToken)
 
-  if (!userInfo?.token) {
+  if (!token) {
     return <Navigate to='/login' replace />
   }
 

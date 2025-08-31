@@ -33,11 +33,13 @@ import Button from '@/components/button'
 import { Badge } from '@/components/badge'
 import { useAppDispatch } from '@/store'
 import { useToast } from '@/components/Toast'
+import { selectUser } from '@/store/slices/general'
 
 export const TransactionList = () => {
   const transactions = useSelector(selectTransactions)
   const dispatch = useAppDispatch()
   const { addToast } = useToast()
+  const currency = useSelector(selectUser)!.currency
 
   const [editingTransaction, setEditingTransaction] =
     useState<TransactionResponse | null>(null)
@@ -124,8 +126,9 @@ export const TransactionList = () => {
                     : 'text-red-600'
                 }`}
               >
-                {transaction.type === 'income' ? '+' : '-'}$
+                {transaction.type === 'income' ? '+' : '-'}
                 {transaction.amount.toLocaleString()}
+                {' ' + currency}
               </p>
 
               <div className='flex items-center space-x-1'>

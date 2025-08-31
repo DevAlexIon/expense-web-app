@@ -41,7 +41,7 @@ const baseQuery: BaseQueryFn<
     baseUrl,
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as RootState
-      const token = state.general.user?.token
+      const token = state.general.token
       if (token) {
         headers.set('Authorization', `Bearer ${token}`)
       }

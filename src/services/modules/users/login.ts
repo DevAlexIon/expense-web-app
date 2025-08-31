@@ -8,11 +8,12 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  token: 'string'
+  token: string
   user: {
-    id: 'string'
-    name: 'string'
-    email: 'string'
+    id: string
+    name: string
+    email: string
+    currency: string
   }
 }
 

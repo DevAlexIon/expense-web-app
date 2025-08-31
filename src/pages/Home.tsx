@@ -17,10 +17,12 @@ import { useAppDispatch } from '@/store'
 import { useEffect } from 'react'
 import CountUp from 'react-countup'
 import { usePrevious } from '@/hooks/usePrevious'
+import { selectUser } from '@/store/slices/general'
 
 const Home: React.FC = () => {
   const transactions = useSelector(selectTransactions)
   const dispatch = useAppDispatch()
+  const currency = useSelector(selectUser)!.currency
 
   const totalIncome = transactions
     .filter(t => t.type === 'income')
@@ -57,14 +59,14 @@ const Home: React.FC = () => {
                   balance >= 0 ? 'text-green-600' : 'text-red-600'
                 }`}
               >
-                $
                 <CountUp
                   start={prevBalance}
                   end={balance}
                   duration={1.5}
                   separator=','
                   key={balance}
-                />
+                />{' '}
+                {currency}
               </div>
               <p className='text-xs text-gray-500 mt-1'>
                 {balance >= 0 ? '+' : '-'} Current balance
@@ -81,13 +83,13 @@ const Home: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-semibold text-green-600'>
-                $
                 <CountUp
                   start={prevIncome}
                   end={totalIncome}
                   duration={1.5}
                   separator=','
-                />
+                />{' '}
+                {currency}
               </div>
               <p className='text-xs text-gray-500 mt-1'>
                 {transactions.filter(t => t.type === 'income').length}{' '}
@@ -105,13 +107,13 @@ const Home: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-semibold text-red-600'>
-                $
                 <CountUp
                   start={prevExpenses}
                   end={totalExpenses}
                   duration={1.5}
                   separator=','
-                />
+                />{' '}
+                {currency}
               </div>
               <p className='text-xs text-gray-500 mt-1'>
                 {transactions.filter(t => t.type === 'expense').length}{' '}

@@ -5,6 +5,7 @@ import Home from '@/pages/Home'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import PrivateRoute from './components/privateRoute'
+import { Settings } from './pages/Settings'
 
 const AppRoutes: React.FC = () => {
   return (
@@ -18,6 +19,16 @@ const AppRoutes: React.FC = () => {
               <PrivateRoute>
                 <Layout>
                   <Home />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/settings'
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <Settings />
                 </Layout>
               </PrivateRoute>
             }
