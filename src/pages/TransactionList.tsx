@@ -127,7 +127,7 @@ export const TransactionList = () => {
                 }`}
               >
                 {transaction.type === 'income' ? '+' : '-'}
-                {transaction.amount.toLocaleString()}
+                {transaction.amount.toFixed(2)}
                 {' ' + currency}
               </p>
 

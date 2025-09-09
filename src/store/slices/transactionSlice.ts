@@ -23,8 +23,11 @@ export const getUserTransactions = createAsyncThunk(
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const result = await dispatch(
-        transactionsApi.endpoints.getUserTransactions.initiate(),
+        transactionsApi.endpoints.getUserTransactions.initiate(undefined, {
+          forceRefetch: true,
+        }),
       ).unwrap()
+
       dispatch(setTransactions(result))
       return result
     } catch (err: any) {
