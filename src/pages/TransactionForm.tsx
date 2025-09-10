@@ -179,7 +179,13 @@ export const TransactionForm = ({
             {/* Date */}
             <div className='space-y-2'>
               <Label htmlFor='date'>Date*</Label>
-              <Field as={Input} id='date' name='date' type='date' />
+              <Field
+                as={Input}
+                id='date'
+                name='date'
+                type='date'
+                min={new Date().toISOString().split('T')[0]}
+              />
               <ErrorMessage
                 name='date'
                 component='div'
