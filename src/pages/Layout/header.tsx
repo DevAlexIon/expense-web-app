@@ -46,9 +46,8 @@ const Header: React.FC = () => {
           <div className='flex items-center space-x-4'>
             <Button
               variant='outline'
-              disabled
               size='sm'
-              // onClick={onNavigateToReports}
+              onClick={() => navigate('/reports')}
               className='flex items-center space-x-2'
             >
               <BarChart3 className='w-4 h-4' />
