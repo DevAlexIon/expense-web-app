@@ -18,7 +18,7 @@ import { useAppDispatch } from '@/store'
 import { registerUser, selectToken } from '@/store/slices/general'
 import { useToast } from '@/components/Toast'
 import { SerializedError } from '@reduxjs/toolkit'
-import { ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, Loader2, ShieldCheck } from 'lucide-react'
 import { useSelector } from 'react-redux'
 
 export const Register = () => {
@@ -58,8 +58,8 @@ export const Register = () => {
           password: values.password,
         }),
       ).unwrap()
-      addToast('Account created — sign in to continue', 'success')
-      navigate('/login')
+      addToast('Welcome to Ledger', 'success')
+      navigate('/')
     } catch (error) {
       const err = error as SerializedError
       addToast(err.message ?? 'Something went wrong', 'error')
@@ -210,10 +210,14 @@ export const Register = () => {
                     className='h-11 w-full cursor-pointer'
                     disabled={isLoading}
                   >
-                    <span>
-                      {isLoading ? 'Creating account…' : 'Create account'}
-                    </span>
-                    {!isLoading && <ArrowRight className='h-4 w-4' />}
+                    {isLoading ? (
+                      <Loader2 className='h-4 w-4 animate-spin' />
+                    ) : (
+                      <>
+                        <span>Create account</span>
+                        <ArrowRight className='h-4 w-4' />
+                      </>
+                    )}
                   </Button>
                 </div>
               </Form>

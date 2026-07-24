@@ -19,7 +19,7 @@ import { useAppDispatch } from '@/store'
 import { loginUser, selectToken } from '@/store/slices/general'
 import { getUserTransactions } from '@/store/slices/transactionSlice'
 import { SerializedError } from '@reduxjs/toolkit'
-import { ArrowRight, Eye, EyeOff, Lock } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, Loader2, Lock } from 'lucide-react'
 import { useSelector } from 'react-redux'
 
 export const Login = () => {
@@ -140,8 +140,14 @@ export const Login = () => {
                     className='h-11 w-full cursor-pointer'
                     disabled={loading}
                   >
-                    <span>{loading ? 'Signing in…' : 'Sign in'}</span>
-                    {!loading && <ArrowRight className='h-4 w-4' />}
+                    {loading ? (
+                      <Loader2 className='h-4 w-4 animate-spin' />
+                    ) : (
+                      <>
+                        <span>Sign in</span>
+                        <ArrowRight className='h-4 w-4' />
+                      </>
+                    )}
                   </Button>
                 </div>
               </Form>

@@ -10,10 +10,11 @@ export interface LoginPayload {
 export interface LoginResponse {
   token: string
   user: {
-    id: string
+    _id?: string
+    id?: string
     name: string
     email: string
-    currency: string
+    currency?: string
   }
 }
 

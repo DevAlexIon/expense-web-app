@@ -19,6 +19,21 @@ const initialState: GeneralInitialState = {
   user: null,
 }
 
+function mapUser(raw: {
+  _id?: string
+  id?: string
+  name: string
+  email: string
+  currency?: string
+}): User {
+  return {
+    id: String(raw.id ?? raw._id ?? ''),
+    name: raw.name,
+    email: raw.email,
+    currency: raw.currency ?? 'RON',
+  }
+}
+
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (
@@ -30,7 +45,12 @@ export const loginUser = createAsyncThunk(
         userApi.endpoints.login.initiate({ body: payload }),
       ).unwrap()
 
-      dispatch(setCredentials({ token: result.token, user: result.user }))
+      dispatch(
+        setCredentials({
+          token: result.token,
+          user: mapUser(result.user),
+        }),
+      )
       return result
     } catch (err: any) {
       return rejectWithValue(err.data || err.message)
@@ -48,6 +68,13 @@ export const registerUser = createAsyncThunk(
       const result = await dispatch(
         userApi.endpoints.register.initiate({ body: payload }),
       ).unwrap()
+
+      dispatch(
+        setCredentials({
+          token: result.token,
+          user: mapUser(result.user),
+        }),
+      )
       return result
     } catch (err: any) {
       return rejectWithValue(err.data || err.message)

@@ -9,9 +9,14 @@ export interface RegisterPayload {
 }
 
 export interface RegisterResponse {
-  id: 'string'
-  name: 'string'
-  email: 'string'
+  token: string
+  user: {
+    _id?: string
+    id?: string
+    name: string
+    email: string
+    currency?: string
+  }
 }
 
 export default (build: EndpointBuilder<any, any, any>) =>
