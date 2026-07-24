@@ -2,14 +2,6 @@
 
 @config '../tailwind.config.js';
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -21,99 +13,135 @@
 }
 
 @layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-size: 14px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
+  --font-size: 15px;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+
+  /* Surfaces — cool slate, not cream */
+  --background: #f3f4f7;
+  --foreground: #0c1222;
   --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
+  --card-foreground: #0c1222;
+  --popover: #ffffff;
+  --popover-foreground: #0c1222;
+
+  /* Brand — deep navy ink */
+  --primary: #0c1222;
+  --primary-foreground: #f8f7f4;
+
+  /* Soft secondary */
+  --secondary: #e8eaf0;
+  --secondary-foreground: #0c1222;
+  --muted: #e8eaf0;
+  --muted-foreground: #5c6578;
+  --accent: #efe8dc;
+  --accent-foreground: #0c1222;
+
+  /* Brass highlight */
+  --brass: #b8956c;
+  --brass-foreground: #0c1222;
+  --brass-soft: #f3ebe0;
+
+  /* Finance semantics — forest + deep rose (no teal/coral) */
+  --income: #1b7a4e;
+  --income-soft: #e6f4ec;
+  --expense: #b8334a;
+  --expense-soft: #f8e8eb;
+
+  --destructive: #b8334a;
   --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
+
+  --border: rgba(12, 18, 34, 0.08);
   --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
+  --input-background: #eef0f4;
+  --switch-background: #c8cdd8;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --ring: #b8956c;
+
+  --chart-1: #0c1222;
+  --chart-2: #b8956c;
+  --chart-3: #1b7a4e;
+  --chart-4: #b8334a;
+  --chart-5: #5c6578;
+
+  --radius: 0.875rem;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0c1222;
+  --sidebar-primary: #0c1222;
+  --sidebar-primary-foreground: #f8f7f4;
+  --sidebar-accent: #efe8dc;
+  --sidebar-accent-foreground: #0c1222;
+  --sidebar-border: rgba(12, 18, 34, 0.08);
+  --sidebar-ring: #b8956c;
+
+  --background-light: #f3f4f7;
+  --shadow: rgba(12, 18, 34, 0.12);
+  --shadow-light: rgba(12, 18, 34, 0.04);
+  --accent-2: #b8956c;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --background: #0a0e18;
+  --foreground: #f4f5f8;
+  --card: #121826;
+  --card-foreground: #f4f5f8;
+  --popover: #121826;
+  --popover-foreground: #f4f5f8;
+  --primary: #f4f5f8;
+  --primary-foreground: #0c1222;
+  --secondary: #1c2433;
+  --secondary-foreground: #f4f5f8;
+  --muted: #1c2433;
+  --muted-foreground: #9aa3b5;
+  --accent: #2a241c;
+  --accent-foreground: #f4f5f8;
+  --brass: #d4b48a;
+  --brass-foreground: #0c1222;
+  --brass-soft: #2a241c;
+  --income: #3d9b6a;
+  --income-soft: #143528;
+  --expense: #d45a6c;
+  --expense-soft: #3a1a22;
+  --destructive: #d45a6c;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: #1c2433;
+  --input-background: #1c2433;
+  --ring: #d4b48a;
+  --chart-1: #d4b48a;
+  --chart-2: #3d9b6a;
+  --chart-3: #d45a6c;
+  --chart-4: #9aa3b5;
+  --chart-5: #f4f5f8;
+  --sidebar: #121826;
+  --sidebar-foreground: #f4f5f8;
+  --sidebar-primary: #d4b48a;
+  --sidebar-primary-foreground: #0c1222;
+  --sidebar-accent: #1c2433;
+  --sidebar-accent-foreground: #f4f5f8;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #d4b48a;
+  --background-light: #0a0e18;
+  --accent-2: #d4b48a;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-light: var(--background-light);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -127,6 +155,13 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-brass: var(--brass);
+  --color-brass-foreground: var(--brass-foreground);
+  --color-brass-soft: var(--brass-soft);
+  --color-income: var(--income);
+  --color-income-soft: var(--income-soft);
+  --color-expense: var(--expense);
+  --color-expense-soft: var(--expense-soft);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -151,6 +186,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: var(--font-body);
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-mono: var(--font-body);
 }
 
 @layer base {
@@ -159,13 +197,226 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    letter-spacing: -0.011em;
+    overscroll-behavior: none;
+    background-image:
+      radial-gradient(
+        ellipse 80% 50% at 100% -20%,
+        rgba(184, 149, 108, 0.12),
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 0% 100%,
+        rgba(12, 18, 34, 0.04),
+        transparent 50%
+      );
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
   }
 }
 
-/**
- * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
- */
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+  }
+
+  .font-mono-label {
+    font-family: var(--font-body);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid rgba(12, 18, 34, 0.06);
+  }
+
+  .page-shell {
+    @apply relative min-h-screen w-full overflow-x-clip;
+  }
+
+  .page-container {
+    @apply relative z-0 mx-auto max-w-7xl px-5 py-5 sm:px-8 sm:py-6;
+  }
+
+  .stat-card {
+    @apply relative overflow-hidden rounded-2xl border border-border bg-card p-0 shadow-[0_1px_2px_rgba(12,18,34,0.04),0_8px_24px_rgba(12,18,34,0.04)] transition-shadow duration-300 hover:shadow-[0_1px_2px_rgba(12,18,34,0.06),0_12px_32px_rgba(12,18,34,0.08)];
+  }
+
+  .surface-card {
+    @apply rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgba(12,18,34,0.04),0_8px_24px_rgba(12,18,34,0.04)];
+  }
+
+  .auth-atmosphere {
+    background:
+      radial-gradient(
+        ellipse 70% 60% at 15% 20%,
+        rgba(184, 149, 108, 0.18),
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 50% 50% at 85% 80%,
+        rgba(12, 18, 34, 0.08),
+        transparent 50%
+      ),
+      linear-gradient(165deg, #f3f4f7 0%, #ebe8e2 45%, #f3f4f7 100%);
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(12, 18, 34, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(12, 18, 34, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .fade-up {
+    animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .fade-up-delay-1 {
+    animation-delay: 0.08s;
+  }
+  .fade-up-delay-2 {
+    animation-delay: 0.16s;
+  }
+  .fade-up-delay-3 {
+    animation-delay: 0.24s;
+  }
+  .fade-up-delay-4 {
+    animation-delay: 0.32s;
+  }
+
+  .lift-hover {
+    @apply transition-transform duration-200 hover:-translate-y-0.5;
+  }
+
+  .magnetic-btn {
+    @apply relative overflow-hidden transition-all duration-300;
+  }
+
+  .magnetic-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.18) 50%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.5s ease;
+  }
+
+  .magnetic-btn:hover::after {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes auth-orb-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(18px, -14px) scale(1.06);
+  }
+}
+
+@keyframes auth-ring-breathe {
+  0% {
+    transform: translate(-50%, -50%) scale(0.72);
+    opacity: 0.55;
+  }
+  55% {
+    opacity: 0.22;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.18);
+    opacity: 0;
+  }
+}
+
+.auth-orb-a {
+  animation: auth-orb-drift 9s ease-in-out infinite;
+}
+
+.auth-orb-b {
+  animation: auth-orb-drift 11s ease-in-out infinite reverse;
+}
+
+.auth-ring {
+  opacity: 0;
+}
+
+.auth-ring-active {
+  animation: auth-ring-breathe 4.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.auth-ring-delay {
+  animation-delay: 1.4s !important;
+}
+
+.auth-ring-delay-2 {
+  animation-delay: 2.8s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-orb-a,
+  .auth-orb-b,
+  .auth-ring-active {
+    animation: none;
+  }
+}
+
+.date-picker-panel .rdp-root {
+  --rdp-accent-color: #0c1222;
+  --rdp-accent-background-color: #efe8dc;
+  --rdp-day-height: 2.25rem;
+  --rdp-day-width: 100%;
+  --rdp-day_button-height: 2.25rem;
+  --rdp-day_button-width: 2.25rem;
+  margin: 0;
+  width: 100%;
+}
+
+.date-picker-panel .rdp-months {
+  max-width: none;
+  width: 100%;
+}
+
+.date-picker-panel .rdp-day {
+  width: 100%;
+}
+
 @layer base {
   :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
     h1 {
@@ -220,4 +471,9 @@
 
 html {
   font-size: var(--font-size);
+  overscroll-behavior: none;
+}
+
+body {
+  overscroll-behavior: none;
 }

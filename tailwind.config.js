@@ -5,46 +5,33 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
-    extend: {
-      colors: {
-        green: '#00A53D',
-        red: '#E7000B',
-      },
-    },
     fontFamily: {
-      poppins: ['Poppins'],
+      sans: ['Inter', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+      display: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+      mono: ['Inter', 'system-ui', 'sans-serif'],
+      poppins: ['Inter', 'system-ui', 'ui-sans-serif', 'sans-serif'],
     },
     extend: {
       colors: {
+        green: '#1B7A4E',
+        red: '#B8334A',
         'accent-2': 'var(--accent-2)',
+        brass: 'var(--brass)',
+        income: 'var(--income)',
+        expense: 'var(--expense)',
       },
-      // animation: {
-      //   pulse: 'pulse 2s infinite',
-      //   moving: 'move 3s linear infinite',
-      //   'slide-right': 'slide-right 2s linear infinite',
-      // },
-      // keyframes: {
-      //   pulse: {
-      //     '0%, 100%': { opacity: 0.5 },
-      //     '50%': { opacity: 1 },
-      //     'slide-right': {
-      //       '0%': { transform: 'translateX(-100%)' },
-      //       '100%': { transform: 'translateX(100%)' },
-      //     },
-      //   },
-      //   move: {
-      //     '0%': { transform: 'translateX(-100%)' },
-      //     '100%': { transform: 'translateX(100%)' },
-      //   },
-      // },
-      // TODO: Modify spacing, borderRadius, boxShadow with designer's values
+      // Readable SaaS scale — denser than last pass, not tiny like original 10px
       fontSize: {
-        xs: ['10px', { lineHeight: '9px' }],
-        sm: ['12px', { lineHeight: '18px' }],
-        md: ['14px', { lineHeight: '21px' }],
-        lg: ['18px', { lineHeight: '27px' }],
-        xl: ['24px', { lineHeight: '36px' }],
-        '2xl': ['32px', { lineHeight: '48px' }],
+        xs: ['0.75rem', { lineHeight: '1.125rem' }], // 12px
+        sm: ['0.875rem', { lineHeight: '1.25rem' }], // 14px
+        md: ['0.9375rem', { lineHeight: '1.375rem' }], // 15px
+        base: ['0.9375rem', { lineHeight: '1.4rem' }], // 15px
+        lg: ['1.0625rem', { lineHeight: '1.5rem' }], // 17px
+        xl: ['1.25rem', { lineHeight: '1.75rem' }], // 20px
+        '2xl': ['1.5rem', { lineHeight: '2rem' }], // 24px
+        '3xl': ['1.75rem', { lineHeight: '2.15rem' }],
+        '4xl': ['2rem', { lineHeight: '2.35rem' }],
+        '5xl': ['2.5rem', { lineHeight: '1.15' }],
       },
       spacing: {
         'container-padding-mobile': 'var(--spacing-4)',

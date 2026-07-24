@@ -1,10 +1,19 @@
 import Button from '@/components/button'
+import { LedgerLogo } from '@/components/LedgerLogo'
 import { useToast } from '@/components/Toast'
 import { useAppDispatch } from '@/store'
 import { clearCredentials, selectUser } from '@/store/slices/general'
-import { BarChart3, LogOut, Wallet } from 'lucide-react'
+import { setTransactions } from '@/store/slices/transactionSlice'
+import { api } from '@/services/api'
+import {
+  BarChart3,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+} from 'lucide-react'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
+import { resetDashboardSession } from '@/helpers/dashboardSession'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -14,92 +23,68 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(clearCredentials())
+    dispatch(setTransactions([]))
+    dispatch(api.util.resetApiState())
+    resetDashboardSession()
     addToast('Logout successful', 'success')
     navigate('/login')
   }
 
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    [
+      'inline-flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200',
+      isActive
+        ? 'bg-primary text-primary-foreground shadow-sm'
+        : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
+    ].join(' ')
+
   return (
-    <>
-      {/* Header */}
-      <header className='bg-white border-b border-gray-200 px-6 py-4'>
-        <div className='max-w-7xl mx-auto flex items-center justify-between'>
-          <div className='flex items-center space-x-4'>
-            <div
-              className='flex items-center space-x-3 cursor-pointer'
-              onClick={() => navigate('/')}
-            >
-              <div className='flex items-center justify-center w-10 h-10 bg-primary rounded-xl'>
-                <Wallet className='w-5 h-5 text-primary-foreground' />
-              </div>
-              <div>
-                <h1 className='text-lg font-semibold text-gray-900'>
-                  Expense Tracker
-                </h1>
-                <p className='text-sm text-gray-500'>
-                  Welcome back,{' '}
-                  <span className='font-bold'>{userInfo?.name}</span>
-                </p>
-              </div>
-            </div>
+    <header className='sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/90'>
+      <div className='mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-2.5 sm:px-8'>
+        <button
+          type='button'
+          className='flex cursor-pointer items-center gap-2.5 text-left transition-opacity hover:opacity-90'
+          onClick={() => navigate('/')}
+        >
+          <LedgerLogo />
+          <div className='hidden min-w-0 sm:block'>
+            <p className='font-display text-lg font-bold leading-none tracking-tight text-foreground'>
+              Ledger
+            </p>
+            <p className='mt-0.5 truncate text-xs text-muted-foreground'>
+              {userInfo?.name ? `Hi, ${userInfo.name}` : 'Expense Tracker'}
+            </p>
           </div>
+        </button>
 
-          <div className='flex items-center space-x-4'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={() => navigate('/reports')}
-              className='flex items-center space-x-2'
-            >
-              <BarChart3 className='w-4 h-4' />
-              <span>Reports</span>
-            </Button>
+        <nav className='flex items-center gap-1 sm:gap-1.5'>
+          <NavLink to='/' end className={navLinkClass}>
+            <LayoutDashboard className='h-4 w-4' strokeWidth={2.2} />
+            <span className='hidden md:inline'>Dashboard</span>
+          </NavLink>
+          <NavLink to='/reports' className={navLinkClass}>
+            <BarChart3 className='h-4 w-4' strokeWidth={2.2} />
+            <span className='hidden md:inline'>Reports</span>
+          </NavLink>
+          <NavLink to='/settings' className={navLinkClass}>
+            <Settings className='h-4 w-4' strokeWidth={2.2} />
+            <span className='hidden md:inline'>Settings</span>
+          </NavLink>
 
-            <Button
-              variant='ghost'
-              size='sm'
-              onClick={() => navigate('/settings')}
-              className='text-gray-500 hover:text-gray-700'
-            >
-              <svg
-                className='w-4 h-4'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'
-                />
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'
-                />
-              </svg>
-            </Button>
+          <div className='mx-1 hidden h-5 w-px bg-border sm:block' />
 
-            <div className='flex items-center space-x-3'>
-              {/* <img
-                src={'https://placehold.co/600x400'}
-                alt='User Avatar'
-                className='w-8 h-8 rounded-full'
-              /> */}
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={handleLogout}
-                className='text-gray-500 hover:text-gray-700'
-              >
-                <LogOut className='w-4 h-4' />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-    </>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={handleLogout}
+            className='h-8 w-8 cursor-pointer text-muted-foreground'
+            aria-label='Log out'
+          >
+            <LogOut className='h-4 w-4' strokeWidth={2.2} />
+          </Button>
+        </nav>
+      </div>
+    </header>
   )
 }
 

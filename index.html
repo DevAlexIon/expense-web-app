@@ -2,25 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/bobnet_os.svg" />
+    <link rel="icon" type="image/svg+xml" href="/ledger-mark.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Same stack as content-repurposer: Inter (body) + Plus Jakarta Sans (display) -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Expense Web App</title>
-    <!-- <script>
-      document.documentElement.classList.toggle(
-        'dark',
-        localStorage.theme === 'dark' ||
-          (!('theme' in localStorage) &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches),
-      )
-    </script> -->
+    <title>Expense Tracker</title>
   </head>
   <body class="">
-    <div id="root" class="flex flex-1 font-poppins"></div>
+    <div id="root" class="flex flex-1 font-sans"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

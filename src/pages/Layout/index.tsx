@@ -6,9 +6,9 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = props => {
   return (
-    <div className='min-h-screen flex flex-1 flex-col bg-background-light dark:bg-background pb-spacing-12xl'>
+    <div className='page-shell flex min-h-screen flex-1 flex-col overscroll-none pb-8'>
       <Header />
-      {props.children}
+      <main className='relative z-0 flex-1'>{props.children}</main>
     </div>
   )
 }

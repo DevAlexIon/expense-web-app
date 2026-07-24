@@ -7,9 +7,7 @@ interface CardProps {
 
 export const Card = ({ children, className = '' }: CardProps) => {
   return (
-    <div
-      className={`rounded-lg border border-border bg-card text-card-foreground shadow-sm ${className}`}
-    >
+    <div className={`surface-card text-card-foreground ${className}`}>
       {children}
     </div>
   )
@@ -17,7 +15,7 @@ export const Card = ({ children, className = '' }: CardProps) => {
 
 export const CardHeader = ({ children, className = '' }: CardProps) => {
   return (
-    <div className={`flex flex-col space-y-1.5 p-6 ${className}`}>
+    <div className={`flex flex-col space-y-1 p-4 sm:p-5 ${className}`}>
       {children}
     </div>
   )
@@ -26,7 +24,7 @@ export const CardHeader = ({ children, className = '' }: CardProps) => {
 export const CardTitle = ({ children, className = '' }: CardProps) => {
   return (
     <h3
-      className={`text-lg font-semibold leading-none tracking-tight ${className}`}
+      className={`font-display text-[0.975rem] font-semibold leading-snug tracking-tight text-foreground ${className}`}
     >
       {children}
     </h3>
@@ -35,10 +33,12 @@ export const CardTitle = ({ children, className = '' }: CardProps) => {
 
 export const CardDescription = ({ children, className = '' }: CardProps) => {
   return (
-    <p className={`text-sm text-muted-foreground ${className}`}>{children}</p>
+    <p className={`text-sm leading-snug text-muted-foreground ${className}`}>
+      {children}
+    </p>
   )
 }
 
 export const CardContent = ({ children, className = '' }: CardProps) => {
-  return <div className={`p-6 pt-0 ${className}`}>{children}</div>
+  return <div className={`p-4 pt-0 sm:p-5 sm:pt-0 ${className}`}>{children}</div>
 }

@@ -85,8 +85,46 @@ export function cn(...inputs: ClassValue[]) {
 export const formatDateForInput = (isoDate?: string) => {
   if (!isoDate) return ''
   const date = new Date(isoDate)
+  if (Number.isNaN(date.getTime())) return ''
   const yyyy = date.getFullYear()
   const mm = String(date.getMonth() + 1).padStart(2, '0')
   const dd = String(date.getDate()).padStart(2, '0')
   return `${yyyy}-${mm}-${dd}`
+}
+
+/** Normalize any date string / Date to YYYY-MM-DD (local calendar day) */
+export const toDateKey = (value?: string | Date | null) => {
+  if (!value) return ''
+  if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) {
+    return value.slice(0, 10)
+  }
+  const date = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  const yyyy = date.getFullYear()
+  const mm = String(date.getMonth() + 1).padStart(2, '0')
+  const dd = String(date.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
+/** Coerce API amounts (number | string) safely for display */
+export const toAmount = (value: unknown) => {
+  const n = typeof value === 'number' ? value : Number(value)
+  return Number.isFinite(n) ? n : 0
+}
+
+export const formatAmount = (value: unknown, digits = 2) =>
+  toAmount(value).toFixed(digits)
+
+export const getErrorMessage = (error: unknown, fallback: string) => {
+  if (typeof error === 'string' && error.trim()) return error
+  if (error && typeof error === 'object') {
+    const maybe = error as { message?: unknown; data?: { message?: unknown } }
+    if (typeof maybe.message === 'string' && maybe.message.trim()) {
+      return maybe.message
+    }
+    if (typeof maybe.data?.message === 'string' && maybe.data.message.trim()) {
+      return maybe.data.message
+    }
+  }
+  return fallback
 }

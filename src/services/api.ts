@@ -8,26 +8,7 @@ import {
 import { Mutex } from 'async-mutex'
 import type { RootState } from '@/store'
 import { Constants } from '@/constants/general'
-
-// const refreshAppToken = async (api: BaseQueryApi, extraOptions: any) => {
-//   const state = api.getState() as RootState
-//   const refreshToken = state.auth.refreshToken
-//   const result = await baseQuery(
-//     {
-//       url: `/devices/fresh-token/${refreshToken}`,
-//       headers: { 'no-auth': 'true' },
-//     },
-//     api,
-//     extraOptions,
-//   )
-//   if (result.error) {
-//     throw new Error('Cannot refresh app token.')
-//   }
-
-//   api.dispatch({ type: 'auth/refreshToken', payload: result.data as string })
-
-//   return true
-// }
+import { resetDashboardSession } from '@/helpers/dashboardSession'
 
 const mutex = new Mutex()
 
@@ -52,29 +33,49 @@ const baseQuery: BaseQueryFn<
   return rawBaseQuery(args, api, extraOptions)
 }
 
+/** Avoid importing Redux slices here — circular deps with the API module crash the app. */
+const forceClientLogout = (api: {
+  dispatch: (action: unknown) => unknown
+  getState: () => unknown
+}) => {
+  const state = api.getState() as RootState
+  if (!state.general.token) return
+
+  api.dispatch({ type: 'general/clearCredentials' })
+  api.dispatch({ type: 'transaction/setTransactions', payload: [] })
+  resetDashboardSession()
+
+  if (
+    typeof window !== 'undefined' &&
+    window.location.pathname !== '/login' &&
+    window.location.pathname !== '/register'
+  ) {
+    window.location.assign('/login')
+  }
+}
+
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   await mutex.waitForUnlock()
-  let result = await baseQuery(args, api, extraOptions)
-  if (result.error && result.error.status === 403) {
+  const result = await baseQuery(args, api, extraOptions)
+
+  if (
+    result.error &&
+    (result.error.status === 401 || result.error.status === 403)
+  ) {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
       try {
-        // await refreshAppToken(api, extraOptions)
-        result = await baseQuery(args, api, extraOptions)
-      } catch {
-        // api.dispatch(logoutUser())
+        forceClientLogout(api)
       } finally {
         release()
       }
-    } else {
-      await mutex.waitForUnlock()
-      result = await baseQuery(args, api, extraOptions)
     }
   }
+
   return result
 }
 

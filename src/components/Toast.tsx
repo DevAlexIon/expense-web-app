@@ -43,39 +43,38 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className={`flex items-center gap-3 p-4 rounded-2xl shadow-xl border backdrop-blur-sm max-w-sm text-sm relative overflow-hidden
+              className={`relative flex max-w-sm items-center gap-3 overflow-hidden rounded-2xl border p-4 text-sm shadow-xl backdrop-blur-sm
                 ${
                   toast.type === 'success'
-                    ? 'bg-green-100/90 border-green-300 text-green-900'
+                    ? 'border-income/25 bg-income-soft/95 text-income'
                     : toast.type === 'error'
-                    ? 'bg-red-100/90 border-red-300 text-red-900'
-                    : 'bg-blue-100/90 border-blue-300 text-blue-900'
+                    ? 'border-expense/25 bg-expense-soft/95 text-expense'
+                    : 'border-brass/30 bg-brass-soft/95 text-foreground'
                 }`}
             >
-              {toast.type === 'success' && <CheckCircle className='w-5 h-5' />}
-              {toast.type === 'error' && <XCircle className='w-5 h-5' />}
-              {toast.type === 'info' && <Info className='w-5 h-5' />}
+              {toast.type === 'success' && <CheckCircle className='h-5 w-5' />}
+              {toast.type === 'error' && <XCircle className='h-5 w-5' />}
+              {toast.type === 'info' && <Info className='h-5 w-5 text-brass' />}
 
-              <div className='flex-1'>{toast.message}</div>
+              <div className='flex-1 font-medium'>{toast.message}</div>
 
               <button
                 onClick={() => removeToast(toast.id)}
-                className='opacity-60 hover:opacity-100 transition'
+                className='opacity-60 transition hover:opacity-100'
               >
-                <X className='w-4 h-4' />
+                <X className='h-4 w-4' />
               </button>
 
-              {/* Progress bar */}
               <motion.div
                 initial={{ width: '100%' }}
                 animate={{ width: '0%' }}
                 transition={{ duration: 4, ease: 'linear' }}
                 className={`absolute bottom-0 left-0 h-1 ${
                   toast.type === 'success'
-                    ? 'bg-green-500'
+                    ? 'bg-income'
                     : toast.type === 'error'
-                    ? 'bg-red-500'
-                    : 'bg-blue-500'
+                    ? 'bg-expense'
+                    : 'bg-brass'
                 }`}
               />
             </motion.div>

@@ -166,6 +166,9 @@ const transaction = createSlice({
 export const selectTransactions = (state: RootState) =>
   state.transaction.transactions
 
+export const selectTransactionsLoading = (state: RootState) =>
+  state.transaction.loading
+
 export const {
   setTransactions,
   removeTransactionFromState,

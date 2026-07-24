@@ -15,6 +15,8 @@ import { useAppDispatch } from '@/store'
 import { TransactionSchema } from '@/schemas/TransactionSchema'
 import { useToast } from '@/components/Toast'
 import { SerializedError } from '@reduxjs/toolkit'
+import { TrendingDown, TrendingUp } from 'lucide-react'
+import { DatePickerField } from '@/components/DatePickerField'
 
 const expenseCategories = [
   'Food',
@@ -70,6 +72,7 @@ export const TransactionForm = ({
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues || defaultValues}
       validationSchema={TransactionSchema}
       onSubmit={async (values, { resetForm }) => {
@@ -86,40 +89,60 @@ export const TransactionForm = ({
           addToast(err.message || 'Failed to save transaction', 'error')
         }
       }}
-      s
     >
       {({ values, setFieldValue }) => {
         const categories =
           values.type === 'income' ? incomeCategories : expenseCategories
 
+        const handleTypeChange = (type: 'income' | 'expense') => {
+          if (type === values.type) return
+          const nextCategories =
+            type === 'income' ? incomeCategories : expenseCategories
+          setFieldValue('type', type)
+          // Clear category when switching type — lists don't overlap meaningfully
+          if (!nextCategories.includes(values.category)) {
+            setFieldValue('category', '')
+          }
+        }
+
         return (
-          <Form className='space-y-4'>
-            {/* Transaction Type */}
-            <div className='space-y-2'>
-              <Label>Transaction Type*</Label>
-              <Select
-                value={values.type}
-                onValueChange={value =>
-                  setFieldValue('type', value as 'income' | 'expense')
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder='Select type' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='income'>Income</SelectItem>
-                  <SelectItem value='expense'>Expense</SelectItem>
-                </SelectContent>
-              </Select>
+          <Form className='space-y-3'>
+            <div className='space-y-1.5'>
+              <Label>Transaction type*</Label>
+              <div className='grid grid-cols-2 gap-1.5 rounded-xl bg-secondary/60 p-1'>
+                <button
+                  type='button'
+                  onClick={() => handleTypeChange('income')}
+                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-all ${
+                    values.type === 'income'
+                      ? 'bg-card text-income shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <TrendingUp className='h-4 w-4' strokeWidth={2.2} />
+                  Income
+                </button>
+                <button
+                  type='button'
+                  onClick={() => handleTypeChange('expense')}
+                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-all ${
+                    values.type === 'expense'
+                      ? 'bg-card text-expense shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <TrendingDown className='h-4 w-4' strokeWidth={2.2} />
+                  Expense
+                </button>
+              </div>
               <ErrorMessage
                 name='type'
                 component='div'
-                className='text-red-500 text-sm'
+                className='text-sm text-expense'
               />
             </div>
 
-            {/* Amount */}
-            <div className='space-y-2'>
+            <div className='space-y-1.5'>
               <Label htmlFor='amount'>Amount*</Label>
               <Field
                 as={Input}
@@ -131,34 +154,32 @@ export const TransactionForm = ({
               <ErrorMessage
                 name='amount'
                 component='div'
-                className='text-red-500 text-sm'
+                className='text-sm text-expense'
               />
             </div>
 
-            {/* Description */}
-            <div className='space-y-2'>
+            <div className='space-y-1.5'>
               <Label htmlFor='description'>Description</Label>
               <Field
                 as={Textarea}
                 id='description'
                 name='description'
-                rows={3}
+                rows={2}
               />
               <ErrorMessage
                 name='description'
                 component='div'
-                className='text-red-500 text-sm'
+                className='text-sm text-expense'
               />
             </div>
 
-            {/* Category */}
-            <div className='space-y-2'>
+            <div className='space-y-1.5'>
               <Label>Category*</Label>
               <Select
                 value={values.category}
                 onValueChange={value => setFieldValue('category', value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className='cursor-pointer'>
                   <SelectValue placeholder='Select category' />
                 </SelectTrigger>
                 <SelectContent>
@@ -172,30 +193,30 @@ export const TransactionForm = ({
               <ErrorMessage
                 name='category'
                 component='div'
-                className='text-red-500 text-sm'
+                className='text-sm text-expense'
               />
             </div>
 
-            {/* Date */}
-            <div className='space-y-2'>
+            <div className='space-y-1.5'>
               <Label htmlFor='date'>Date*</Label>
-              <Field
-                as={Input}
+              <DatePickerField
                 id='date'
-                name='date'
-                type='date'
-                min={new Date().toISOString().split('T')[0]}
+                value={values.date}
+                onChange={next => setFieldValue('date', next)}
               />
               <ErrorMessage
                 name='date'
                 component='div'
-                className='text-red-500 text-sm'
+                className='text-sm text-expense'
               />
             </div>
 
-            {/* Submit button */}
-            <Button type='submit' className='w-full'>
-              {mode === 'create' ? 'Add Transaction' : 'Update Transaction'}
+            <Button
+              type='submit'
+              className='w-full cursor-pointer'
+              variant={values.type === 'income' ? 'default' : 'destructive'}
+            >
+              {mode === 'create' ? 'Add transaction' : 'Update transaction'}
             </Button>
           </Form>
         )

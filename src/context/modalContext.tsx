@@ -1,4 +1,4 @@
-import BiosModal from '@/components/modal'
+import AppModal from '@/components/modal'
 import { ModalSize } from '@/types/common.interface'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
@@ -69,7 +69,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
       value={{ openModal, closeModal, updateModalContent }}
     >
       {children}
-      <BiosModal
+      <AppModal
         size={modalSize}
         title={modalTitle}
         modalHeader={modalHeader}
@@ -77,7 +77,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
         onClose={closeModal}
       >
         {modalContent}
-      </BiosModal>
+      </AppModal>
     </ModalContext.Provider>
   )
 }

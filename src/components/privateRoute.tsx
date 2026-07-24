@@ -8,8 +8,9 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const token = useSelector(selectToken)
+  const user = useSelector(selectUser)
 
-  if (!token) {
+  if (!token || !user) {
     return <Navigate to='/login' replace />
   }
 

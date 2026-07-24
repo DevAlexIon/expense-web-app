@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ModalSize } from '@/types/common.interface'
 import { LogOut } from 'lucide-react'
 
-interface BiosModalProps {
+interface AppModalProps {
   open: boolean
   onClose: () => void
   children: React.ReactNode
@@ -12,7 +12,7 @@ interface BiosModalProps {
   title?: string
 }
 
-const BiosModal: React.FC<BiosModalProps> = ({
+const AppModal: React.FC<AppModalProps> = ({
   open,
   onClose,
   children,
@@ -94,4 +94,4 @@ const BiosModal: React.FC<BiosModalProps> = ({
   )
 }
 
-export default BiosModal
+export default AppModal

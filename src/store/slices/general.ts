@@ -68,8 +68,24 @@ export const updateUser = createAsyncThunk(
     { dispatch, rejectWithValue, getState },
   ) => {
     try {
+      const body: {
+        name?: string
+        email?: string
+        currency?: string
+        currentPassword?: string
+        newPassword?: string
+      } = {}
+
+      if (payload.name !== undefined) body.name = payload.name
+      if (payload.email !== undefined) body.email = payload.email
+      if (payload.currency !== undefined) body.currency = payload.currency
+      if (payload.newPassword) {
+        body.currentPassword = payload.currentPassword
+        body.newPassword = payload.newPassword
+      }
+
       const res = await dispatch(
-        userApi.endpoints.updateProfile.initiate(payload),
+        userApi.endpoints.updateProfile.initiate(body),
       ).unwrap()
 
       const state = getState() as RootState

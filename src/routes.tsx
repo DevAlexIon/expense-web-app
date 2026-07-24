@@ -34,16 +34,18 @@ const AppRoutes: React.FC = () => {
               </PrivateRoute>
             }
           />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
           <Route
             path='/reports'
             element={
-              <Layout>
-                <Reports />
-              </Layout>
+              <PrivateRoute>
+                <Layout>
+                  <Reports />
+                </Layout>
+              </PrivateRoute>
             }
           />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
         </Routes>
       </ModalProvider>
     </BrowserRouter>

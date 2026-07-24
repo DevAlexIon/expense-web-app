@@ -3,8 +3,9 @@ import { EndpointBuilder } from '@reduxjs/toolkit/query'
 export interface UpdateProfilePayload {
   name?: string
   email?: string
-  password?: string
   currency?: string
+  currentPassword?: string
+  newPassword?: string
 }
 
 export interface UpdateProfileResponse {

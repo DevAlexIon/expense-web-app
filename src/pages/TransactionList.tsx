@@ -6,10 +6,10 @@ import {
   selectTransactions,
 } from '@/store/slices/transactionSlice'
 import { TransactionResponse } from '@/services/modules/transactions/getUserTransactions'
-import { formatDateForInput } from '@/helpers/utils'
+import { formatAmount, formatDateForInput, getErrorMessage } from '@/helpers/utils'
 
 import { TransactionForm, TransactionFormValues } from './TransactionForm'
-import { Edit, Trash2, TrendingUp, TrendingDown } from 'lucide-react'
+import { Edit, Trash2, TrendingUp, TrendingDown, Inbox } from 'lucide-react'
 
 import {
   Dialog,
@@ -39,7 +39,7 @@ export const TransactionList = () => {
   const transactions = useSelector(selectTransactions)
   const dispatch = useAppDispatch()
   const { addToast } = useToast()
-  const currency = useSelector(selectUser)!.currency
+  const currency = useSelector(selectUser)?.currency ?? 'RON'
 
   const [editingTransaction, setEditingTransaction] =
     useState<TransactionResponse | null>(null)
@@ -51,32 +51,41 @@ export const TransactionList = () => {
   }
 
   const handleUpdate = async (values: TransactionFormValues) => {
-    await dispatch(
-      editTransaction({
-        id: editingTransaction!._id,
-        ...values,
-      }),
-    )
-    addToast('Transaction edited successfully!', 'success')
-    setIsEditDialogOpen(false)
-    setEditingTransaction(null)
+    if (!editingTransaction?._id) return
+    try {
+      await dispatch(
+        editTransaction({
+          id: editingTransaction._id,
+          ...values,
+        }),
+      ).unwrap()
+      addToast('Transaction edited successfully!', 'success')
+      setIsEditDialogOpen(false)
+      setEditingTransaction(null)
+    } catch (error) {
+      addToast(getErrorMessage(error, 'Failed to edit transaction'), 'error')
+    }
   }
 
   const handleDelete = async (id: string) => {
-    dispatch(deleteTransaction(id))
-    addToast('Transaction deleted successfully!', 'success')
+    try {
+      await dispatch(deleteTransaction(id)).unwrap()
+      addToast('Transaction deleted successfully!', 'success')
+    } catch (error) {
+      addToast(getErrorMessage(error, 'Failed to delete transaction'), 'error')
+    }
   }
 
   if (transactions.length === 0) {
     return (
-      <div className='p-8 text-center'>
-        <div className='w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center'>
-          <TrendingUp className='w-6 h-6 text-gray-400' />
+      <div className='px-6 py-12 text-center sm:px-5'>
+        <div className='mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary'>
+          <Inbox className='h-6 w-6 text-muted-foreground' strokeWidth={2.2} />
         </div>
-        <h3 className='text-lg font-medium text-gray-900 mb-2'>
+        <h3 className='mb-1.5 text-base font-semibold text-foreground'>
           No transactions yet
         </h3>
-        <p className='text-gray-500'>
+        <p className='mx-auto max-w-xs text-sm text-muted-foreground'>
           Start by adding your first transaction using the form on the left.
         </p>
       </div>
@@ -85,76 +94,85 @@ export const TransactionList = () => {
 
   return (
     <>
-      <div className='divide-y divide-gray-200'>
+      <div className='divide-y divide-border'>
         {transactions.map(transaction => (
           <div
             key={transaction._id}
-            className='p-4 hover:bg-gray-50 transition-colors flex justify-between items-center'
+            className='flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-secondary/40 sm:px-5'
           >
-            <div className='flex items-center space-x-4'>
+            <div className='flex min-w-0 items-center gap-3'>
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  transaction.type === 'income' ? 'bg-green-100' : 'bg-red-100'
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                  transaction.type === 'income'
+                    ? 'bg-income-soft'
+                    : 'bg-expense-soft'
                 }`}
               >
                 {transaction.type === 'income' ? (
-                  <TrendingUp className='w-4 h-4 text-green-600' />
+                  <TrendingUp
+                    className='h-4 w-4 text-income'
+                    strokeWidth={2.2}
+                  />
                 ) : (
-                  <TrendingDown className='w-4 h-4 text-red-600' />
+                  <TrendingDown
+                    className='h-4 w-4 text-expense'
+                    strokeWidth={2.2}
+                  />
                 )}
               </div>
               <div className='min-w-0'>
-                <div className='flex items-center space-x-2 mb-1'>
-                  <p className='font-medium text-gray-900 truncate'>
-                    {transaction.description}
+                <div className='mb-1 flex flex-wrap items-center gap-2'>
+                  <p className='truncate font-medium text-foreground'>
+                    {transaction.description || transaction.category}
                   </p>
-                  <Badge variant='secondary' className='text-xs'>
+                  <Badge
+                    variant={
+                      transaction.type === 'income' ? 'income' : 'expense'
+                    }
+                  >
                     {transaction.category}
                   </Badge>
                 </div>
-                <p className='text-sm text-gray-500'>
+                <p className='font-mono-label !normal-case !tracking-normal text-muted-foreground'>
                   {new Date(transaction.date).toLocaleDateString()}
                 </p>
               </div>
             </div>
 
-            <div className='flex items-center space-x-3'>
+            <div className='flex shrink-0 items-center gap-2 sm:gap-3'>
               <p
-                className={`font-semibold ${
-                  transaction.type === 'income'
-                    ? 'text-green-600'
-                    : 'text-red-600'
+                className={`text-sm font-semibold tabular-nums sm:text-base ${
+                  transaction.type === 'income' ? 'text-income' : 'text-expense'
                 }`}
               >
                 {transaction.type === 'income' ? '+' : '-'}
-                {transaction.amount.toFixed(2)}
-                {' ' + currency}
+                {formatAmount(transaction.amount)} {currency}
               </p>
 
-              <div className='flex items-center space-x-1'>
-                {/* Edit Button */}
+              <div className='flex items-center'>
                 <Button
                   variant='ghost'
-                  size='sm'
+                  size='icon'
                   onClick={() => handleEdit(transaction)}
+                  aria-label='Edit transaction'
                 >
-                  <Edit className='w-4 h-4' />
+                  <Edit className='h-4 w-4' />
                 </Button>
 
-                {/* Delete Alert */}
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
                       variant='ghost'
-                      size='sm'
-                      className='text-red-600 hover:text-red-700 hover:bg-red-50'
+                      size='icon'
+                      className='text-expense hover:bg-expense-soft hover:text-expense'
+                      aria-label='Delete transaction'
                     >
-                      <Trash2 className='w-4 h-4' />
+                      <Trash2 className='h-4 w-4' />
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Delete Transaction</AlertDialogTitle>
+                      <AlertDialogTitle>Delete transaction</AlertDialogTitle>
                       <AlertDialogDescription>
                         Are you sure you want to delete this transaction? This
                         action cannot be undone.
@@ -164,7 +182,7 @@ export const TransactionList = () => {
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => handleDelete(transaction._id)}
-                        className='bg-red-600 hover:bg-red-700'
+                        className='bg-expense hover:bg-expense/90'
                       >
                         Delete
                       </AlertDialogAction>
@@ -177,11 +195,10 @@ export const TransactionList = () => {
         ))}
       </div>
 
-      {/* Global Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className='sm:max-w-md'>
           <DialogHeader>
-            <DialogTitle>Edit Transaction</DialogTitle>
+            <DialogTitle>Edit transaction</DialogTitle>
             <DialogDescription>
               Update the details of your transaction and save the changes.
             </DialogDescription>

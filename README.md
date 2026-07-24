@@ -1,1 +1,3 @@
-# ux-kiosk-demo
+# expense-web-app
+
+Personal expense tracker — React + Vite frontend.

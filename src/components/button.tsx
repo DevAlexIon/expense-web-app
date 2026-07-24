@@ -8,6 +8,7 @@ type Variant =
   | 'secondary'
   | 'ghost'
   | 'link'
+  | 'brass'
 
 type Size = 'default' | 'sm' | 'lg' | 'icon'
 
@@ -18,21 +19,27 @@ type ButtonProps = React.ComponentProps<'button'> & {
 }
 
 const baseClasses =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-brass/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background'
+
 const variantClasses: Record<Variant, string> = {
-  default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+  default:
+    'magnetic-btn bg-primary text-primary-foreground shadow-sm shadow-primary/20 hover:bg-primary/90 hover:shadow-md hover:shadow-primary/25',
   destructive:
-    'bg-red-500 text-white hover:bg-red-600 focus-visible:ring-red-400',
-  outline: 'border border-gray-300 bg-white text-gray-900 hover:bg-gray-100',
-  secondary: 'bg-secondary text-white hover:bg-secondary/80',
-  ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800',
-  link: 'text-primary underline-offset-4 hover:underline',
+    'bg-expense text-white hover:bg-expense/90 focus-visible:ring-expense/40',
+  outline:
+    'border border-border bg-card text-foreground hover:bg-secondary/80 hover:border-primary/15',
+  secondary:
+    'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+  ghost: 'hover:bg-secondary/80 text-muted-foreground hover:text-foreground',
+  link: 'text-brass underline-offset-4 hover:underline font-medium',
+  brass:
+    'magnetic-btn bg-brass text-brass-foreground shadow-sm shadow-brass/25 hover:bg-brass/90',
 }
 
 const sizeClasses: Record<Size, string> = {
-  default: 'h-9 px-4 py-2',
-  sm: 'h-8 px-3 py-1.5 text-sm',
-  lg: 'h-10 px-6 py-3 text-lg',
+  default: 'h-10 px-4 py-2',
+  sm: 'h-9 px-3.5 py-1.5 text-sm',
+  lg: 'h-11 px-6 py-3',
   icon: 'h-9 w-9 p-2',
 }
 
